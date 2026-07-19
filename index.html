@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="stage2.css" />
   </head>
   <body>
     <div class="app-shell">
@@ -52,7 +53,7 @@
           </div>
 
           <section class="journey-card" aria-labelledby="journey-title">
-            <div class="journey-heading"><div><p class="eyebrow">YOUR JOURNEY</p><h2 id="journey-title">From land to home</h2></div><span class="progress-label">1 of 4 complete</span></div>
+            <div class="journey-heading"><div><p class="eyebrow">YOUR JOURNEY</p><h2 id="journey-title">From land to home</h2></div><span class="progress-label">Stage 2 in progress</span></div>
             <div class="journey-steps">
               <button class="journey-step complete" data-target="land"><span class="step-number">✓</span><span><b>Discover land</b><small>Plot selected</small></span></button>
               <button class="journey-step current" data-target="land"><span class="step-number">2</span><span><b>Verify records</b><small>Ready to begin</small></span></button>
@@ -61,20 +62,58 @@
             </div>
           </section>
 
-          <section class="project-grid" id="land">
+          <section class="land-discovery" id="land" aria-labelledby="land-discovery-title">
+            <div class="section-heading">
+              <div><p class="eyebrow">STAGE 2 · LAND DISCOVERY</p><h2 id="land-discovery-title">Find and understand a plot</h2><p>Search a locality or choose a point on the map to create a plot profile.</p></div>
+              <span class="demo-chip">Prototype terrain data</span>
+            </div>
+            <div class="discovery-layout">
+              <aside class="discovery-panel">
+                <form id="plot-form">
+                  <label class="field-label" for="location-search">Search a location</label>
+                  <div class="search-field"><span>⌕</span><input id="location-search" type="search" value="Kharadi, Pune" placeholder="City, locality, or address" /><button type="button" id="search-location">Search</button></div>
+                  <div class="quick-locations" aria-label="Suggested locations"><button type="button" data-location="Kharadi, Pune">Kharadi</button><button type="button" data-location="Whitefield, Bengaluru">Whitefield</button><button type="button" data-location="Gachibowli, Hyderabad">Gachibowli</button></div>
+                  <div class="coordinates"><div><span>LATITUDE</span><b id="latitude">18.5512° N</b></div><div><span>LONGITUDE</span><b id="longitude">73.9496° E</b></div></div>
+                  <div class="form-rule"></div>
+                  <div class="form-row"><label class="field-label" for="plot-width">Plot width <input id="plot-width" type="number" min="1" value="40" /><small>feet</small></label><label class="field-label" for="plot-length">Plot length <input id="plot-length" type="number" min="1" value="60" /><small>feet</small></label></div>
+                  <div class="area-result"><span>ESTIMATED PLOT AREA</span><b id="area-result">2,400 sq ft</b></div>
+                  <button class="primary-button dark full-width" type="submit">Save plot details <span>→</span></button>
+                </form>
+              </aside>
+              <div class="interactive-map" id="terrain-map" role="application" aria-label="Interactive illustrative terrain map. Click to move the selected plot pin.">
+                <div class="map-toolbar"><button class="map-layer active" type="button" data-layer="satellite">Satellite</button><button class="map-layer" type="button" data-layer="terrain">Terrain</button></div>
+                <div class="map-instruction">Click to move plot pin</div>
+                <div class="terrain-shape hill-one"></div><div class="terrain-shape hill-two"></div><div class="terrain-shape hill-three"></div>
+                <div class="grid-lines"></div><div class="map-road map-road-one"></div><div class="map-road map-road-two"></div><div class="map-road map-road-three"></div><div class="map-water"></div>
+                <span class="map-place place-a">KHARADI</span><span class="map-place place-b">WAGHOLI</span><span class="map-place place-c">MULA-MUTHA RIVER</span>
+                <button class="selected-pin" id="selected-pin" type="button" aria-label="Selected plot pin"><i></i><span>Plot</span></button>
+                <div class="map-scale">200 m</div><div class="map-compass">N<br/>↑</div>
+              </div>
+              <aside class="terrain-panel">
+                <div><p class="eyebrow">TERRAIN RESULT</p><h3 id="terrain-title">Gentle slope</h3><p id="terrain-summary">A practical plot for a standard residential foundation.</p></div>
+                <div class="terrain-score"><span id="terrain-score">82</span><small>/100<br/>buildability</small></div>
+                <div class="terrain-data"><div><span>AVG. SLOPE</span><b id="slope-value">3.2°</b></div><div><span>ELEVATION</span><b id="elevation-value">560 m</b></div><div><span>DRAINAGE</span><b id="drainage-value">Moderate</b></div></div>
+                <div class="terrain-tip"><span>i</span><p id="terrain-tip">Reserve a drainage edge during the site survey and confirm soil conditions before finalising the foundation.</p></div>
+                <button class="secondary-button full-width" type="button" data-action="terrain">View terrain notes</button>
+              </aside>
+            </div>
+            <p class="integration-note">Next integration: map search, elevation samples, flood context, and parcel boundaries from approved mapping/data providers.</p>
+          </section>
+
+          <section class="project-grid">
             <article class="plot-card">
               <div class="card-top"><div><p class="eyebrow">ACTIVE PROJECT</p><h2>Plot near Kharadi</h2><p class="location"><span>⌖</span> Pune, Maharashtra</p></div><button class="more-button" aria-label="Project options">•••</button></div>
               <div class="map-art" role="img" aria-label="Illustrative map of the selected Kharadi plot">
                 <div class="map-label label-one">EON IT PARK</div><div class="map-label label-two">KHARADI</div><div class="road road-a"></div><div class="road road-b"></div><div class="road road-c"></div><div class="river"></div><div class="plot-pin"><i></i><b>Selected plot</b></div><div class="north">N ↑</div>
               </div>
-              <div class="plot-meta"><span><b>2,400</b> sq ft plot</span><span><b>4.8 km</b> from city centre</span><button class="text-button" data-action="view-land">View land details →</button></div>
+              <div class="plot-meta"><span><b id="summary-area">2,400</b> sq ft plot</span><span><b>4.8 km</b> from city centre</span><button class="text-button" data-action="open-discovery">View land details →</button></div>
             </article>
 
             <article class="insight-card terrain-card">
               <div class="card-top"><div><p class="eyebrow">TERRAIN SNAPSHOT</p><h2>Buildable with care</h2></div><span class="status calm">Low slope</span></div>
               <div class="terrain-visual"><span class="contour c1"></span><span class="contour c2"></span><span class="contour c3"></span><span class="terrain-marker"></span></div>
               <div class="metric-row"><div><b>3.2°</b><small>average slope</small></div><div><b>560 m</b><small>elevation</small></div><div><b>East</b><small>best frontage</small></div></div>
-              <button class="secondary-button" data-action="terrain">Explore terrain</button>
+              <button class="secondary-button" data-action="open-discovery">Explore terrain</button>
             </article>
           </section>
 
