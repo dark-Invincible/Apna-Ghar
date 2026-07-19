@@ -52,6 +52,10 @@ function setText(id, value) {
   if (element) element.textContent = value;
 }
 
+function setDataSource(value) {
+  setText('data-source', value);
+}
+
 function slopeContent(slope, score) {
   if (slope < 2.5) return { title: 'Mostly level', summary: 'A straightforward starting point for a standard residential foundation.', tip: 'Confirm stormwater flow during the site survey and allow space for surface drainage.' };
   if (slope < 5) return { title: 'Gentle slope', summary: 'A practical plot for a standard residential foundation.', tip: 'Reserve a drainage edge during the site survey and confirm soil conditions before finalising the foundation.' };
@@ -72,6 +76,15 @@ function updateTerrain({ lat, lng, elevation, slope, score, drainage }) {
   dialogs.terrain.text = `${content.summary} Prototype reading: ${slope.toFixed(1)}° average slope, ${Math.round(elevation)} m elevation, and ${drainage.toLowerCase()} drainage. A site survey and architect review are still required.`;
 }
 
+async function requestTerrain(latitude, longitude) {
+  const url = `/api/land-insight?lat=${encodeURIComponent(latitude)}&lng=${encodeURIComponent(longitude)}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('Live terrain unavailable');
+  const result = await response.json();
+  updateTerrain({ lat: result.latitude, lng: result.longitude, elevation: result.elevation, slope: result.slope, score: result.score, drainage: result.drainage });
+  setDataSource('Live elevation data');
+}
+
 function updateArea() {
   const width = Number(document.querySelector('#plot-width')?.value) || 0;
   const length = Number(document.querySelector('#plot-length')?.value) || 0;
@@ -88,11 +101,14 @@ function useLocation(name) {
     const seed = [...searchValue].reduce((total, character) => total + character.charCodeAt(0), 0);
     const generated = { lat: 19.0 + (seed % 50) / 100, lng: 73.5 + (seed % 90) / 100, elevation: 480 + (seed % 250), slope: 1.5 + (seed % 55) / 10, score: 68 + (seed % 24), drainage: seed % 2 ? 'Moderate' : 'Good' };
     updateTerrain(generated);
+    setDataSource('Prototype terrain data');
     showToast(`Prototype plot set near ${searchValue}. Connect a map provider for a live geocoded result.`);
     return;
   }
   locationInput.value = name;
   updateTerrain(location);
+  setDataSource('Prototype terrain data');
+  requestTerrain(location.lat, location.lng).catch(() => undefined);
   showToast(`Terrain profile updated for ${name}.`);
 }
 
@@ -127,7 +143,21 @@ document.querySelector('.dialog-close').addEventListener('click', () => dialog.c
 dialog.addEventListener('close', () => { if (dialog.returnValue === 'submit') showToast('Saved for the next implementation stage.'); });
 document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', () => { document.querySelectorAll('.nav-link').forEach(item => item.classList.remove('active')); link.classList.add('active'); }));
 
-document.querySelector('#search-location')?.addEventListener('click', () => useLocation(locationInput.value));
+document.querySelector('#search-location')?.addEventListener('click', async () => {
+  const query = locationInput.value;
+  if (locations[query]) return useLocation(query);
+  try {
+    const response = await fetch(`/api/search-location?q=${encodeURIComponent(query)}`);
+    if (!response.ok) throw new Error('Live search unavailable');
+    const payload = await response.json();
+    const result = payload.results[0];
+    locationInput.value = result.label;
+    await requestTerrain(result.latitude, result.longitude);
+    showToast(`Live location result selected: ${result.label}.`);
+  } catch {
+    useLocation(query);
+  }
+});
 document.querySelectorAll('[data-location]').forEach(button => button.addEventListener('click', () => useLocation(button.dataset.location)));
 document.querySelector('#plot-form')?.addEventListener('submit', event => { event.preventDefault(); updateArea(); showToast('Plot details saved in this browser session.'); });
 document.querySelectorAll('#plot-width, #plot-length').forEach(input => input.addEventListener('input', updateArea));
@@ -139,7 +169,11 @@ terrainMap?.addEventListener('click', event => {
   pin.style.left = `calc(${x}% - 15px)`;
   pin.style.top = `calc(${y}% - 15px)`;
   const slope = 1.2 + Math.abs(x - 50) / 12 + Math.abs(y - 48) / 17;
-  updateTerrain({ lat: 18.50 + y / 900, lng: 73.90 + x / 730, elevation: 520 + y * .85, slope, score: Math.max(59, Math.round(91 - slope * 3)), drainage: y > 70 ? 'Watch' : 'Moderate' });
+  const latitude = 18.50 + y / 900;
+  const longitude = 73.90 + x / 730;
+  updateTerrain({ lat: latitude, lng: longitude, elevation: 520 + y * .85, slope, score: Math.max(59, Math.round(91 - slope * 3)), drainage: y > 70 ? 'Watch' : 'Moderate' });
+  setDataSource('Prototype terrain data');
+  requestTerrain(latitude, longitude).catch(() => undefined);
   showToast('Plot pin moved. Terrain snapshot refreshed.');
 });
 document.querySelectorAll('.map-layer').forEach(button => button.addEventListener('click', () => {

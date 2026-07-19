@@ -16,10 +16,18 @@ npm run start
 
 Open `http://localhost:4173` in a browser.
 
+## Production land-data setup
+
+This repository is prepared for a Vercel deployment with server-side location-search and elevation endpoints. They use a single `GOOGLE_MAPS_SERVER_KEY` environment variable, which must be set in the Vercel dashboard — never committed to the repository or included in browser code.
+
+Enable billing and the **Geocoding API** plus **Elevation API** in a Google Cloud project. Create a dedicated server key restricted to these APIs and to the production server's IP/network where possible. Google documents that Elevation API requests require an API key and supports coordinate samples; it should be treated as a planning signal, not a replacement for a site survey. [Elevation API documentation](https://developers.google.com/maps/documentation/elevation/requests-elevation) · [Google Maps API-key security guidance](https://developers.google.com/maps/api-security-best-practices)
+
+The frontend still falls back to prototype terrain values locally until these endpoints are deployed and configured.
+
 ## Delivery stages
 
 1. **Product foundation** — complete.
-2. **Land discovery** — interactive prototype complete; live map, geocoding, parcel and elevation-provider integrations remain.
+2. **Land discovery** — interactive prototype and secure server-side location/elevation API layer complete; configure Google Maps credentials, add a live map renderer, then source parcel/flood data for the launch district.
 3. **Land verification** — state-by-state record integrations, document workflow, reviewer handoff.
 4. **AI home design** — prompt/image/blueprint inputs and interactive 3D concepts.
 5. **Valuation engine** — land and construction-cost estimates with source/confidence data.

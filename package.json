@@ -1,6 +1,7 @@
 {
   "name": "apna-ghar",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "description": "Stage 1 prototype for Apna Ghar — a land-to-home intelligence platform.",
   "scripts": {
