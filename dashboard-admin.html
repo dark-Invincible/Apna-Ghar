@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Apna Ghar Partner Admin Portal — Human-Review Console" />
+    <title>Apna Ghar Admin — Human-Review Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --ink: #111b18;
+        --muted: #5e6d68;
+        --paper: #f0f2ed;
+        --surface: #ffffff;
+        --line: #d1d8d4;
+        --green: #1f3d33;
+        --sage: #dbe4dc;
+        --gold: #b37e29;
+        --gold-pale: #f9f0df;
+        --red: #a83d31;
+        --red-pale: #faecea;
+        --shadow: 0 10px 25px rgba(20,30,26,0.06);
+      }
+      body {
+        margin: 0;
+        font-family: Manrope, Arial, sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+        font-size: 13.5px;
+      }
+      header {
+        background: var(--green);
+        color: #f7f9f6;
+        padding: 16px 36px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid var(--gold);
+      }
+      header h1 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      header h1 span {
+        font-size: 11px;
+        background: var(--gold);
+        color: var(--green);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 800;
+      }
+      .back-btn {
+        color: #fff;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 700;
+        border: 1px solid rgba(255,255,255,0.25);
+        padding: 6px 12px;
+        border-radius: 5px;
+        transition: 0.2s;
+      }
+      .back-btn:hover {
+        background: rgba(255,255,255,0.1);
+      }
+      main {
+        max-width: 1000px;
+        margin: 36px auto;
+        padding: 0 24px;
+      }
+      .intro {
+        margin-bottom: 24px;
+      }
+      .intro h2 {
+        margin: 0 0 6px;
+        font-size: 22px;
+        letter-spacing: -0.8px;
+      }
+      .intro p {
+        color: var(--muted);
+        margin: 0;
+      }
+      .table-card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+      th, td {
+        padding: 14px 18px;
+        border-bottom: 1px solid #eff2ee;
+      }
+      th {
+        background: #f8faf7;
+        color: var(--muted);
+        font-family: "DM Mono", monospace;
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 9.5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .badge.verified {
+        background: #e6f3eb;
+        color: #2b7049;
+      }
+      .badge.pending {
+        background: #fdf5e6;
+        color: #9c6c19;
+      }
+      .badge.flagged {
+        background: var(--red-pale);
+        color: var(--red);
+      }
+      .action-btn {
+        background: var(--green);
+        color: white;
+        border: 0;
+        border-radius: 5px;
+        padding: 6px 10px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .action-btn:hover {
+        background: #2b5246;
+      }
+      .action-btn.secondary {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+      .action-btn.secondary:hover {
+        background: #f0f2ed;
+      }
+      .action-btn.flag-btn {
+        background: var(--red);
+      }
+      .action-btn.flag-btn:hover {
+        background: #8b3126;
+      }
+      .doc-link {
+        color: var(--gold);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .doc-link:hover {
+        text-decoration: underline;
+      }
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--green);
+        color: white;
+        padding: 12px 18px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: 0.3s;
+        pointer-events: none;
+        z-index: 100;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>apna<span>ghar</span> <span>PARTNER PORTAL</span></h1>
+      <a href="index.html" class="back-btn">← Back to Workspace</a>
+    </header>
+    
+    <main>
+      <div class="intro">
+        <h2>Human-Review Console</h2>
+        <p>Verify manual document uploads, mutation proofs, and land records for the Sadar and Karchhana Tehsils, Prayagraj.</p>
+      </div>
+      
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Plot Coordinates / Locality</th>
+              <th>Owner Name</th>
+              <th>Document Type</th>
+              <th>State</th>
+              <th>Verification Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-table-body">
+            <!-- Populated via Javascript -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <div id="toast" class="toast">State updated successfully.</div>
+
+    <script>
+      // Mock uploads database. We use localStorage to sync states with index.html in real-time.
+      const defaultDocs = [
+        {
+          id: 'doc_1',
+          lat: 25.4542,
+          lng: 81.8541,
+          locality: 'Civil Lines, Prayagraj',
+          owner: 'Rajesh Kumar Bind',
+          docName: 'Sajra_Map_142_3A.pdf',
+          status: 'pending' // pending, verified, flagged
+        },
+        {
+          id: 'doc_2',
+          lat: 25.4611,
+          lng: 81.8348,
+          locality: 'Katra, Prayagraj',
+          owner: 'Sushila Devi Malviya',
+          docName: 'Khatauni_Registry_88_2.pdf',
+          status: 'verified'
+        },
+        {
+          id: 'doc_3',
+          lat: 25.3721,
+          lng: 81.8904,
+          locality: 'Naini, Prayagraj',
+          owner: 'Ram Chandra Prasad',
+          docName: 'Partition_Suit_Noc_405.pdf',
+          status: 'flagged'
+        }
+      ];
+
+      function loadDocs() {
+        let stored = localStorage.getItem('apnaghar_admin_docs');
+        if (!stored) {
+          localStorage.setItem('apnaghar_admin_docs', JSON.stringify(defaultDocs));
+          return defaultDocs;
+        }
+        return JSON.parse(stored);
+      }
+
+      function saveDocs(docs) {
+        localStorage.setItem('apnaghar_admin_docs', JSON.stringify(docs));
+      }
+
+      function updateStatus(id, newStatus) {
+        const docs = loadDocs();
+        const doc = docs.find(d => d.id === id);
+        if (doc) {
+          doc.status = newStatus;
+          saveDocs(docs);
+          renderTable();
+          showToast(`Status updated to ${newStatus.toUpperCase()} for ${doc.owner}`);
+        }
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+
+      function renderTable() {
+        const docs = loadDocs();
+        const tbody = document.getElementById('admin-table-body');
+        tbody.innerHTML = '';
+        
+        docs.forEach(doc => {
+          const tr = document.createElement('tr');
+          
+          const badgeClass = doc.status === 'verified' ? 'verified' : (doc.status === 'flagged' ? 'flagged' : 'pending');
+          const statusText = doc.status === 'verified' ? 'Verified' : (doc.status === 'flagged' ? 'Disputed / Flagged' : 'Pending Review');
+          
+          tr.innerHTML = `
+            <td>
+              <strong>${doc.locality}</strong><br/>
+              <small style="color:var(--muted)">Lat: ${doc.lat.toFixed(4)}, Lng: ${doc.lng.toFixed(4)}</small>
+            </td>
+            <td>${doc.owner}</td>
+            <td>
+              <a href="#" class="doc-link" onclick="alert('Viewing dummy document payload: ${doc.docName}'); return false;">${doc.docName}</a>
+            </td>
+            <td>
+              <span class="badge ${badgeClass}">${statusText}</span>
+            </td>
+            <td style="display: flex; gap: 8px;">
+              ${doc.status !== 'verified' ? `<button class="action-btn" onclick="updateStatus('${doc.id}', 'verified')">Approve</button>` : ''}
+              ${doc.status !== 'pending' ? `<button class="action-btn secondary" onclick="updateStatus('${doc.id}', 'pending')">Set Pending</button>` : ''}
+              ${doc.status !== 'flagged' ? `<button class="action-btn flag-btn" onclick="updateStatus('${doc.id}', 'flagged')">Flag Dispute</button>` : ''}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Render on load
+      renderTable();
+      
+      // Keep syncing in case of cross-tab changes
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'apnaghar_admin_docs') {
+          renderTable();
+        }
+      });
+    </script>
+  </body>
+</html>

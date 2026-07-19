@@ -34,23 +34,37 @@ export default async function handler(request, response) {
   const longitude = coordinate(request.query.lng, MAX_LONGITUDE);
   if (latitude === null || longitude === null) return response.status(400).json({ error: 'Valid latitude and longitude are required.' });
 
-  const key = process.env.GOOGLE_MAPS_SERVER_KEY;
-  if (!key) return response.status(503).json({ error: 'Terrain service is not configured yet.' });
-
   try {
     const samples = buildSamples(latitude, longitude);
-    const url = new URL('https://maps.googleapis.com/maps/api/elevation/json');
-    url.searchParams.set('locations', samples.map(([lat, lng]) => `${lat},${lng}`).join('|'));
-    url.searchParams.set('key', key);
-    const googleResponse = await fetch(url);
-    if (!googleResponse.ok) throw new Error(`Google API returned ${googleResponse.status}`);
-    const payload = await googleResponse.json();
-    if (payload.status !== 'OK' || payload.results?.length !== samples.length) throw new Error(`Elevation result was ${payload.status}`);
-    const terrain = classifyTerrain(payload.results.map(result => result.elevation));
+    
+    // Construct the Open-Meteo elevation request URL
+    const url = new URL('https://api.open-meteo.com/v1/elevation');
+    const latitudes = samples.map(([lat, lng]) => lat).join(',');
+    const longitudes = samples.map(([lat, lng]) => lng).join(',');
+    url.searchParams.set('latitude', latitudes);
+    url.searchParams.set('longitude', longitudes);
+
+    const openMeteoResponse = await fetch(url);
+    if (!openMeteoResponse.ok) throw new Error(`Open-Meteo API returned ${openMeteoResponse.status}`);
+    
+    const payload = await openMeteoResponse.json();
+    if (!payload.elevation || payload.elevation.length !== samples.length) {
+      throw new Error('Elevation results are incomplete');
+    }
+    
+    const elevations = payload.elevation;
+    const terrain = classifyTerrain(elevations);
+    
     response.setHeader('Cache-Control', 'private, max-age=300');
-    return response.status(200).json({ latitude, longitude, ...terrain, source: 'Google Elevation API', generatedAt: new Date().toISOString() });
+    return response.status(200).json({
+      latitude,
+      longitude,
+      ...terrain,
+      source: 'Open-Meteo Elevation API',
+      generatedAt: new Date().toISOString()
+    });
   } catch (error) {
-    console.error('Terrain insight failed', error.message);
+    console.error('Terrain insight failed:', error.message);
     return response.status(502).json({ error: 'Terrain service is temporarily unavailable.' });
   }
 }

@@ -3,13 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Apna Ghar turns a plot of land into a clearer home-buying and building decision." />
-    <title>Apna Ghar — Land to home, with clarity</title>
+    <meta name="description" content="Apna Ghar - The Ultimate Land-to-Home AI Ecosystem for Prayagraj, UP." />
+    <title>Apna Ghar — The Ultimate Land-to-Home AI Ecosystem</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Leaflet GIS Mapping CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- ES Module Import Map for React Three Fiber (Zero Node-Build Setup) -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18.2.0?dev",
+          "react-dom": "https://esm.sh/react-dom@18.2.0?dev",
+          "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?dev",
+          "three": "https://esm.sh/three@0.150.0",
+          "@react-three/fiber": "https://esm.sh/@react-three/fiber@8.12.0?deps=react,three"
+        }
+      }
+    </script>
+    
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="stage2.css" />
+    <script type="module" src="three-canvas.js"></script>
   </head>
   <body>
     <div class="app-shell">
@@ -20,130 +40,565 @@
         </a>
         <nav>
           <a class="nav-link active" href="#overview" data-nav="overview"><span>⌂</span> Overview</a>
-          <a class="nav-link" href="#land" data-nav="land"><span>◫</span> My land</a>
+          <a class="nav-link" href="#land" data-nav="land"><span>◫</span> Land discovery</a>
+          <a class="nav-link" href="#legal" data-nav="legal"><span>⌑</span> Legal verification</a>
           <a class="nav-link" href="#design" data-nav="design"><span>◇</span> Design studio</a>
-          <a class="nav-link" href="#value" data-nav="value"><span>₹</span> Value report</a>
+          <a class="nav-link" href="#value" data-nav="value"><span>₹</span> Valuation &amp; ROI</a>
         </nav>
+        
         <div class="sidebar-bottom">
           <div class="help-card">
-            <span class="help-icon">?</span>
-            <strong>Need a second opinion?</strong>
-            <p>Invite a lawyer or architect when your plot is ready.</p>
-            <button class="text-button" data-action="invite">Invite expert →</button>
+            <span class="help-icon">👤</span>
+            <strong>Admin review console</strong>
+            <p>Access human reviews to verify manual uploads.</p>
+            <a href="dashboard-admin.html" target="_blank" class="text-button" style="text-decoration:none; display:inline-block; margin-top:5px;">Open Admin portal →</a>
           </div>
-          <button class="profile" data-action="profile"><span class="avatar">AK</span><span><b>Arjun Kumar</b><small>Personal workspace</small></span><i>⌄</i></button>
+          <button class="profile" data-action="profile">
+            <span class="avatar">AP</span>
+            <span><b>Prayagraj Workspace</b><small>Active Project</small></span>
+            <i>⌄</i>
+          </button>
         </div>
       </aside>
 
       <main>
         <header class="topbar">
           <button class="mobile-menu" aria-label="Open menu">☰</button>
-          <div class="breadcrumbs"><span>Workspace</span><b>/</b><strong>New home project</strong></div>
-          <div class="topbar-actions"><button class="icon-button" aria-label="Notifications">♧<span></span></button><button class="share-button" data-action="share">Share project</button></div>
+          <div class="breadcrumbs"><span>Ecosystem</span><b>/</b><strong id="breadcrumb-active">Workspace overview</strong></div>
+          <div class="topbar-actions">
+            <button class="icon-button" id="admin-notify-bell" aria-label="Notifications">♧<span class="notify-dot"></span></button>
+            <button class="share-button" id="pdf-download-btn">Download PDF Report</button>
+          </div>
         </header>
 
-        <section class="content" id="overview">
-          <div class="welcome-row">
-            <div>
-              <p class="eyebrow">YOUR LAND-TO-HOME WORKSPACE</p>
-              <h1>Good morning, Arjun.</h1>
-              <p class="subtle">Move from plot discovery to a confident home decision, one clear step at a time.</p>
+        <div class="content">
+          <!-- ================= TAB: OVERVIEW ================= -->
+          <section class="tab-content active" id="tab-overview">
+            <div class="welcome-row">
+              <div>
+                <p class="eyebrow">PRAYAGRAJ REGIONAL PORTAL</p>
+                <h1>Good morning, Partner.</h1>
+                <p class="subtle">Integrated Land-to-Home engine. Target Zone: Prayagraj, Uttar Pradesh.</p>
+              </div>
+              <button class="primary-button" data-action="new-project"><span>+</span> Start a new project</button>
             </div>
-            <button class="primary-button" data-action="new-project"><span>+</span> Start a new project</button>
-          </div>
 
-          <section class="journey-card" aria-labelledby="journey-title">
-            <div class="journey-heading"><div><p class="eyebrow">YOUR JOURNEY</p><h2 id="journey-title">From land to home</h2></div><span class="progress-label">Stage 2 in progress</span></div>
-            <div class="journey-steps">
-              <button class="journey-step complete" data-target="land"><span class="step-number">✓</span><span><b>Discover land</b><small>Plot selected</small></span></button>
-              <button class="journey-step current" data-target="land"><span class="step-number">2</span><span><b>Verify records</b><small>Ready to begin</small></span></button>
-              <button class="journey-step" data-target="design"><span class="step-number">3</span><span><b>Design your home</b><small>AI concept studio</small></span></button>
-              <button class="journey-step" data-target="value"><span class="step-number">4</span><span><b>Know the value</b><small>Cost &amp; market estimate</small></span></button>
-            </div>
+            <section class="journey-card" aria-labelledby="journey-title">
+              <div class="journey-heading">
+                <div><p class="eyebrow">PROCESS ROADMAP</p><h2 id="journey-title">Your 4-Phase Implementation</h2></div>
+                <span class="progress-label" id="roadmap-step-status">Phase 1: Discovery</span>
+              </div>
+              <div class="journey-steps">
+                <button class="journey-step current" data-tab-target="land"><span class="step-number">1</span><span><b>Discover land</b><small>Plot Map &amp; Slope</small></span></button>
+                <button class="journey-step" data-tab-target="legal"><span class="step-number">2</span><span><b>Legal verification</b><small>Bhulekh Match Check</small></span></button>
+                <button class="journey-step" data-tab-target="design"><span class="step-number">3</span><span><b>Dream Design</b><small>3D Concept Studio</small></span></button>
+                <button class="journey-step" data-tab-target="value"><span class="step-number">4</span><span><b>Valuation &amp; ROI</b><small>BOQ &amp; Appreciation</small></span></button>
+              </div>
+            </section>
+
+            <section class="project-grid">
+              <article class="plot-card">
+                <div class="card-top">
+                  <div><p class="eyebrow">ACTIVE PROJECT LOCATION</p><h2 id="overview-plot-title">Plot near Civil Lines</h2><p class="location"><span>⌖</span> Prayagraj, Uttar Pradesh</p></div>
+                </div>
+                <div class="map-art" style="background:#e4ede9; display:grid; place-items:center; border-radius:4px; height:150px; font-family:'DM Mono', monospace; font-size:10px; color:#5a6660; border: 1px solid var(--line);">
+                  <div style="text-align:center;">
+                    <div style="font-size:24px; margin-bottom:8px;">📍</div>
+                    <strong id="overview-latlng">25.4358° N, 81.8463° E</strong><br/>
+                    <span id="overview-locality-sub">Civil Lines, Prayagraj</span>
+                  </div>
+                </div>
+                <div class="plot-meta">
+                  <span><b id="summary-area">2,400</b> sq ft plot</span>
+                  <span><b>Sadar</b> Tehsil</span>
+                  <button class="text-button" data-tab-target="land">Refine plot details →</button>
+                </div>
+              </article>
+
+              <article class="insight-card terrain-card">
+                <div class="card-top">
+                  <div><p class="eyebrow">TERRAIN ACCURACY SIGNAL</p><h2>GIS Topography Profile</h2></div>
+                  <span class="status calm" id="overview-terrain-badge">Level Ground</span>
+                </div>
+                <div style="margin: 15px 0; padding: 12px; background: #f0f3eb; border-radius: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                  <div><small style="color:var(--muted); font-size:9px; display:block;">AVG. SLOPE</small><strong id="overview-slope-val" style="font-size:16px;">0.8°</strong></div>
+                  <div><small style="color:var(--muted); font-size:9px; display:block;">ELEVATION</small><strong id="overview-elevation-val" style="font-size:16px;">98 m</strong></div>
+                  <div><small style="color:var(--muted); font-size:9px; display:block;">BUILDABILITY</small><strong id="overview-score-val" style="font-size:16px;">94/100</strong></div>
+                  <div><small style="color:var(--muted); font-size:9px; display:block;">DRAINAGE</small><strong id="overview-drainage-val" style="font-size:16px;">Good</strong></div>
+                </div>
+                <button class="secondary-button" data-tab-target="land">Inspect slope details</button>
+              </article>
+            </section>
+
+            <section class="action-grid">
+              <article class="action-card legal-card">
+                <div class="card-icon gold">⌑</div>
+                <div><p class="eyebrow">PHASE 2</p><h2>Verify Bhulekh Records</h2><p>Incorporate Khasra or Khata details to fetch state record verification matches.</p></div>
+                <button class="primary-button dark" data-tab-target="legal">Verify records <span>→</span></button>
+              </article>
+              <article class="action-card design-card">
+                <div class="mini-home"><span></span><i></i><b></b></div>
+                <div><p class="eyebrow">PHASE 3</p><h2>AI Architectural Studio</h2><p>Build 3D massing projections using text descriptions or blueprint vectors.</p></div>
+                <button class="secondary-button" data-tab-target="design">Generate 3D model <span>→</span></button>
+              </article>
+            </section>
           </section>
 
-          <section class="land-discovery" id="land" aria-labelledby="land-discovery-title">
+          <!-- ================= TAB: LAND DISCOVERY ================= -->
+          <section class="tab-content" id="tab-land">
             <div class="section-heading">
-              <div><p class="eyebrow">STAGE 2 · LAND DISCOVERY</p><h2 id="land-discovery-title">Find and understand a plot</h2><p>Search a locality or choose a point on the map to create a plot profile.</p></div>
-              <span class="demo-chip" id="data-source">Prototype terrain data</span>
+              <div>
+                <p class="eyebrow">PHASE 1 · GIS DISCOVERY</p>
+                <h2>Identify Your Plot &amp; Terrain</h2>
+                <p>Use the live geocoder to find Prayagraj sectors or double-click directly on the map to pin boundaries.</p>
+              </div>
+              <span class="demo-chip" id="data-source">OpenFreeMap Tiles</span>
             </div>
-            <div class="discovery-layout">
+            
+            <div class="discovery-layout" style="grid-template-columns: 280px 1fr 240px;">
               <aside class="discovery-panel">
                 <form id="plot-form">
-                  <label class="field-label" for="location-search">Search a location</label>
-                  <div class="search-field"><span>⌕</span><input id="location-search" type="search" value="Kharadi, Pune" placeholder="City, locality, or address" /><button type="button" id="search-location">Search</button></div>
-                  <div class="quick-locations" aria-label="Suggested locations"><button type="button" data-location="Kharadi, Pune">Kharadi</button><button type="button" data-location="Whitefield, Bengaluru">Whitefield</button><button type="button" data-location="Gachibowli, Hyderabad">Gachibowli</button></div>
-                  <div class="coordinates"><div><span>LATITUDE</span><b id="latitude">18.5512° N</b></div><div><span>LONGITUDE</span><b id="longitude">73.9496° E</b></div></div>
+                  <label class="field-label" for="location-search">Search a locality in Prayagraj</label>
+                  <div class="search-field">
+                    <span>⌕</span>
+                    <input id="location-search" type="search" value="Civil Lines, Prayagraj" placeholder="City, locality, or landmark" />
+                    <button type="button" id="search-location">Find</button>
+                  </div>
+                  
+                  <div class="quick-locations">
+                    <button type="button" data-location="Civil Lines, Prayagraj">Civil Lines</button>
+                    <button type="button" data-location="Katra, Prayagraj">Katra</button>
+                    <button type="button" data-location="Naini, Prayagraj">Naini</button>
+                    <button type="button" data-location="Phaphamau, Prayagraj">Phaphamau</button>
+                  </div>
+
                   <div class="form-rule"></div>
-                  <div class="form-row"><label class="field-label" for="plot-width">Plot width <input id="plot-width" type="number" min="1" value="40" /><small>feet</small></label><label class="field-label" for="plot-length">Plot length <input id="plot-length" type="number" min="1" value="60" /><small>feet</small></label></div>
-                  <div class="area-result"><span>ESTIMATED PLOT AREA</span><b id="area-result">2,400 sq ft</b></div>
-                  <button class="primary-button dark full-width" type="submit">Save plot details <span>→</span></button>
+
+                  <label class="field-label" style="margin-bottom:8px;">UP Regional Information</label>
+                  <div class="form-row" style="margin-bottom:8px;">
+                    <label class="field-label" for="input-village">Village Name
+                      <input id="input-village" type="text" value="Civil Lines" placeholder="e.g. Katra" />
+                    </label>
+                    <label class="field-label" for="input-tehsil">Tehsil / Block
+                      <input id="input-tehsil" type="text" value="Sadar" placeholder="e.g. Sadar" />
+                    </label>
+                  </div>
+                  
+                  <div class="form-row" style="margin-bottom:8px;">
+                    <label class="field-label" for="input-khasra">Khasra No.
+                      <input id="input-khasra" type="text" value="142/3A" placeholder="e.g. 142/3A" />
+                    </label>
+                    <label class="field-label" for="input-khata">Khata No.
+                      <input id="input-khata" type="text" value="556" placeholder="e.g. 556" />
+                    </label>
+                  </div>
+
+                  <div class="form-row">
+                    <label class="field-label" for="plot-width">Plot width <input id="plot-width" type="number" min="10" max="200" value="40" /><small>feet</small></label>
+                    <label class="field-label" for="plot-length">Plot length <input id="plot-length" type="number" min="10" max="300" value="60" /><small>feet</small></label>
+                  </div>
+
+                  <div class="area-result">
+                    <span>CONFIRMED PLOT AREA</span>
+                    <b id="area-result">2,400 sq ft</b>
+                  </div>
+
+                  <label class="field-label" for="input-proximity" style="margin-top:10px;">Proximity / Access Notes
+                    <input id="input-proximity" type="text" value="Adjacent to 30ft asphalt public road, utilities accessible." placeholder="e.g., road width, sewers" />
+                  </label>
+
+                  <button class="primary-button dark full-width" type="submit" style="margin-top:14px;">Save Plot Profile <span>→</span></button>
                 </form>
               </aside>
-              <div class="interactive-map" id="terrain-map" role="application" aria-label="Interactive illustrative terrain map. Click to move the selected plot pin.">
-                <div class="map-toolbar"><button class="map-layer active" type="button" data-layer="satellite">Satellite</button><button class="map-layer" type="button" data-layer="terrain">Terrain</button></div>
-                <div class="map-instruction">Click to move plot pin</div>
-                <div class="terrain-shape hill-one"></div><div class="terrain-shape hill-two"></div><div class="terrain-shape hill-three"></div>
-                <div class="grid-lines"></div><div class="map-road map-road-one"></div><div class="map-road map-road-two"></div><div class="map-road map-road-three"></div><div class="map-water"></div>
-                <span class="map-place place-a">KHARADI</span><span class="map-place place-b">WAGHOLI</span><span class="map-place place-c">MULA-MUTHA RIVER</span>
-                <button class="selected-pin" id="selected-pin" type="button" aria-label="Selected plot pin"><i></i><span>Plot</span></button>
-                <div class="map-scale">200 m</div><div class="map-compass">N<br/>↑</div>
+
+              <!-- Live Map Container -->
+              <div id="live-map-container" style="position:relative; min-height:450px; background:#e0e4dd; border-radius:2px;">
+                <!-- Map is initialized here by Leaflet -->
               </div>
+
               <aside class="terrain-panel">
-                <div><p class="eyebrow">TERRAIN RESULT</p><h3 id="terrain-title">Gentle slope</h3><p id="terrain-summary">A practical plot for a standard residential foundation.</p></div>
-                <div class="terrain-score"><span id="terrain-score">82</span><small>/100<br/>buildability</small></div>
-                <div class="terrain-data"><div><span>AVG. SLOPE</span><b id="slope-value">3.2°</b></div><div><span>ELEVATION</span><b id="elevation-value">560 m</b></div><div><span>DRAINAGE</span><b id="drainage-value">Moderate</b></div></div>
-                <div class="terrain-tip"><span>i</span><p id="terrain-tip">Reserve a drainage edge during the site survey and confirm soil conditions before finalising the foundation.</p></div>
-                <button class="secondary-button full-width" type="button" data-action="terrain">View terrain notes</button>
+                <div>
+                  <p class="eyebrow">TERRAIN RESULT</p>
+                  <h3 id="terrain-title">Level ground</h3>
+                  <p id="terrain-summary">Mostly level surface. Ideal building parameters.</p>
+                </div>
+                <div class="terrain-score">
+                  <span id="terrain-score">94</span>
+                  <small>/100<br/>buildability</small>
+                </div>
+                <div class="terrain-data">
+                  <div><span>AVG. SLOPE</span><b id="slope-value">0.8°</b></div>
+                  <div><span>ELEVATION</span><b id="elevation-value">98 m</b></div>
+                  <div><span>DRAINAGE</span><b id="drainage-value">Good</b></div>
+                </div>
+                <div class="terrain-tip">
+                  <span>i</span>
+                  <p id="terrain-tip">No structural slope correction needed. Standard raft or strip footings suitable.</p>
+                </div>
+                <div class="coordinates">
+                  <div><span>LATITUDE</span><b id="latitude">25.4358° N</b></div>
+                  <div><span>LONGITUDE</span><b id="longitude">81.8463° E</b></div>
+                </div>
               </aside>
             </div>
-            <p class="integration-note">Next integration: map search, elevation samples, flood context, and parcel boundaries from approved mapping/data providers.</p>
           </section>
 
-          <section class="project-grid">
-            <article class="plot-card">
-              <div class="card-top"><div><p class="eyebrow">ACTIVE PROJECT</p><h2>Plot near Kharadi</h2><p class="location"><span>⌖</span> Pune, Maharashtra</p></div><button class="more-button" aria-label="Project options">•••</button></div>
-              <div class="map-art" role="img" aria-label="Illustrative map of the selected Kharadi plot">
-                <div class="map-label label-one">EON IT PARK</div><div class="map-label label-two">KHARADI</div><div class="road road-a"></div><div class="road road-b"></div><div class="road road-c"></div><div class="river"></div><div class="plot-pin"><i></i><b>Selected plot</b></div><div class="north">N ↑</div>
+          <!-- ================= TAB: LEGAL VERIFICATION ================= -->
+          <section class="tab-content" id="tab-legal">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">PHASE 2 · UP BHULEKH INTEGRATION</p>
+                <h2>Land-Record Match Verification</h2>
+                <p>Cross-examine plot numbers against the State Land Record database to generate structural validation indicators.</p>
               </div>
-              <div class="plot-meta"><span><b id="summary-area">2,400</b> sq ft plot</span><span><b>4.8 km</b> from city centre</span><button class="text-button" data-action="open-discovery">View land details →</button></div>
-            </article>
+            </div>
 
-            <article class="insight-card terrain-card">
-              <div class="card-top"><div><p class="eyebrow">TERRAIN SNAPSHOT</p><h2>Buildable with care</h2></div><span class="status calm">Low slope</span></div>
-              <div class="terrain-visual"><span class="contour c1"></span><span class="contour c2"></span><span class="contour c3"></span><span class="terrain-marker"></span></div>
-              <div class="metric-row"><div><b>3.2°</b><small>average slope</small></div><div><b>560 m</b><small>elevation</small></div><div><b>East</b><small>best frontage</small></div></div>
-              <button class="secondary-button" data-action="open-discovery">Explore terrain</button>
-            </article>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+              <!-- Left: Record Lookup Details -->
+              <div class="journey-card" style="margin-bottom:0;">
+                <h3 style="margin-top:0;">Verify Plot against Registry</h3>
+                <p class="subtle" style="margin-bottom:20px;">Check ownership status, mutation updates, and litigation risks registered in Prayagraj.</p>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:15px;">
+                  <div>
+                    <label class="field-label">Khasra Number</label>
+                    <input id="legal-check-khasra" type="text" class="dialog-form" style="width:100%; border:1px solid var(--line); padding:10px; border-radius:5px;" value="142/3A" />
+                  </div>
+                  <div>
+                    <label class="field-label">Khata Number</label>
+                    <input id="legal-check-khata" type="text" class="dialog-form" style="width:100%; border:1px solid var(--line); padding:10px; border-radius:5px;" value="556" />
+                  </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
+                  <div>
+                    <label class="field-label">Village Name</label>
+                    <input id="legal-check-village" type="text" class="dialog-form" style="width:100%; border:1px solid var(--line); padding:10px; border-radius:5px;" value="Civil Lines" />
+                  </div>
+                  <div>
+                    <label class="field-label">Tehsil</label>
+                    <input id="legal-check-tehsil" type="text" class="dialog-form" style="width:100%; border:1px solid var(--line); padding:10px; border-radius:5px;" value="Sadar" />
+                  </div>
+                </div>
+
+                <button class="primary-button dark full-width" id="btn-run-legal-check">Perform Record Verification Match</button>
+
+                <div style="margin-top:20px; padding:15px; border-radius:8px; border:1px solid #d3a04e; background:#fbfcf8;">
+                  <strong style="color:var(--gold); display:block; margin-bottom:5px;">⚠️ CRITICAL LEGAL GUARDRAIL DISCLAIMER</strong>
+                  <p style="margin:0; font-size:10px; line-height:1.5; color:#5a6660;">
+                    This software executes a strict **Land-Record Match Verification** utilizing public Bhulekh datasets. A record match is <strong>not proof of absolute title</strong> and does not guarantee the absence of unregistered disputes, oral family partitions, bank mortgages, or tax liens. Professional legal due diligence by a qualified local advocate is required before executing property acquisitions or financial agreements.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Right: Verification Results Display -->
+              <div class="journey-card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between;" id="legal-result-card">
+                <div>
+                  <h3 style="margin-top:0; display:flex; justify-content:space-between; align-items:center;">
+                    Verification Status 
+                    <span class="badge pending" id="legal-badge">Not Checked Yet</span>
+                  </h3>
+                  <div class="form-rule"></div>
+
+                  <div id="legal-results-placeholder" style="text-align:center; padding:40px 0; color:var(--muted);">
+                    <span style="font-size:32px;">🔍</span>
+                    <p>Enter plot details and press Verify to perform the check.</p>
+                  </div>
+
+                  <div id="legal-results-content" style="display:none;">
+                    <div style="margin-bottom:12px;">
+                      <span style="color:var(--muted); font-size:9px; font-family:'DM Mono';">REGISTERED OWNER</span>
+                      <strong id="legal-res-owner" style="display:block; font-size:14px;">Rajesh Kumar Bind</strong>
+                    </div>
+                    
+                    <div style="margin-bottom:12px;">
+                      <span style="color:var(--muted); font-size:9px; font-family:'DM Mono';">LAST STATE MUTATION DATE</span>
+                      <strong id="legal-res-mutation" style="display:block; font-size:13px;">2024-04-12</strong>
+                    </div>
+
+                    <div style="margin-bottom:12px; padding:10px; border-radius:5px;" id="legal-res-review-box">
+                      <span style="color:var(--muted); font-size:9px; font-family:'DM Mono';">LEGAL REVIEW STATUS</span>
+                      <p id="legal-res-reason" style="margin:3px 0 0; font-size:11px; line-height:1.45;"></p>
+                    </div>
+
+                    <div style="margin-bottom:12px;">
+                      <span style="color:var(--muted); font-size:9px; font-family:'DM Mono';">MISSING / RECOMMENDATION DOCUMENTS</span>
+                      <ul id="legal-res-missing" style="margin:5px 0 0; padding-left:18px; font-size:11px; color:#a83d31;">
+                        <!-- JS injected -->
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Document Upload Section -->
+                <div style="background:#f4f6f3; padding:12px; border-radius:6px; border:1px solid var(--line); margin-top:15px;">
+                  <strong style="font-size:11px; display:block; margin-bottom:6px;">Upload Manual Title Document for Review</strong>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="file" id="manual-doc-upload" style="font-size:10px; flex:1;" />
+                    <button class="primary-button" id="btn-upload-doc" style="padding:6px 12px; font-size:10px; box-shadow:none;">Upload</button>
+                  </div>
+                  <div id="upload-status" style="font-size:9px; color:var(--muted); margin-top:5px;">EPHEMERAL PRIVACY CONTEXT: files auto-purged from server within 5 minutes of verification.</div>
+                </div>
+              </div>
+            </div>
           </section>
 
-          <section class="action-grid">
-            <article class="action-card legal-card">
-              <div class="card-icon gold">⌑</div><div><p class="eyebrow">NEXT BEST STEP</p><h2>Check land records</h2><p>Use Khasra, Khata, or survey number to begin a land-record match.</p></div><button class="primary-button dark" data-action="verify">Verify land details <span>→</span></button>
-            </article>
-            <article class="action-card design-card" id="design">
-              <div class="mini-home"><span></span><i></i><b></b></div><div><p class="eyebrow">AI DESIGN STUDIO</p><h2>Imagine what belongs here</h2><p>Describe a home, upload an inspiration image, or start from a blueprint.</p></div><button class="secondary-button" data-action="design">Create a concept <span>→</span></button>
-            </article>
+          <!-- ================= TAB: DESIGN STUDIO ================= -->
+          <section class="tab-content" id="tab-design">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">PHASE 3 · CONCEPT GENERATION</p>
+                <h2>AI Dream Design Studio</h2>
+                <p>Construct a 3D building model matching the slope and boundaries of your plot. Pre-processed with architectural rules.</p>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 290px 1fr; gap:20px;">
+              <!-- Controls panel -->
+              <aside class="discovery-panel" style="border:1px solid var(--line); border-radius:8px; display:flex; flex-direction:column; gap:16px;">
+                <!-- Choice of path -->
+                <div>
+                  <label class="field-label" style="margin-bottom:6px;">Generation Pipeline</label>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                    <button class="secondary-button active" id="path-btn-text" style="padding:6px; font-size:10px;">Text-to-3D</button>
+                    <button class="secondary-button" id="path-btn-image" style="padding:6px; font-size:10px;">Image-to-3D</button>
+                  </div>
+                  <button class="secondary-button full-width" id="path-btn-blueprint" style="padding:6px; font-size:10px; margin-top:6px;">Blueprint Scanner</button>
+                </div>
+
+                <!-- Preprocessing options -->
+                <div id="design-path-text-container">
+                  <label class="field-label" for="prompt-input">Design Idea</label>
+                  <textarea id="prompt-input" style="width:100%; height:70px; border:1px solid var(--line); border-radius:5px; padding:8px; font:inherit; font-size:11px;" placeholder="Describe balconies, materials, floors..."></textarea>
+                  <div style="margin-top:6px; font-size:9px; color:var(--muted);">
+                    ⚡ Auto-optimisation will append: <i>"Prayagraj regional solar path compatibility, premium BOQ textures, structural alignment."</i>
+                  </div>
+                </div>
+
+                <div id="design-path-image-container" style="display:none; border: 2px dashed var(--line); padding:15px; text-align:center; border-radius:6px;">
+                  <span style="font-size:24px;">🖼️</span>
+                  <p style="margin:5px 0 0; font-size:10px;">Drag reference house image or click to upload</p>
+                  <input type="file" id="design-image-file" style="display:none;" />
+                  <button type="button" class="secondary-button" style="margin-top:8px; padding:4px 8px; font-size:9px;" onclick="document.getElementById('design-image-file').click()">Select File</button>
+                  <div id="bg-removal-loading" style="display:none; font-size:9px; color:var(--gold); margin-top:6px; font-weight:700;">Removing Background...</div>
+                </div>
+
+                <div id="design-path-blueprint-container" style="display:none; border:1px solid var(--line); border-radius:6px; padding:10px; background:#f8faf7;">
+                  <strong style="font-size:10px; display:block; margin-bottom:5px;">Blueprint Verification Checklist</strong>
+                  <div style="font-size:10px; display:flex; flex-direction:column; gap:6px;">
+                    <label style="display:flex; gap:6px; font-weight:normal; align-items:center;">
+                      <input type="checkbox" id="check-bp-dims" />
+                      Verify plot dimensions (40x60 ft)
+                    </label>
+                    <label style="display:flex; gap:6px; font-weight:normal; align-items:center;">
+                      <input type="checkbox" id="check-bp-setbacks" />
+                      Confirm Sadar Tehsil setbacks
+                    </label>
+                    <label style="display:flex; gap:6px; font-weight:normal; align-items:center;">
+                      <input type="checkbox" id="check-bp-height" />
+                      Height strictly &lt; 15m (UP Rules)
+                    </label>
+                  </div>
+                  <div style="font-size:8px; color:var(--muted); margin-top:8px;">All checks required to render model.</div>
+                </div>
+
+                <div class="form-rule"></div>
+
+                <!-- Parameters -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                  <div>
+                    <label class="field-label" for="design-height">Bldg Height</label>
+                    <input id="design-height" type="number" value="20" min="10" max="50" style="width:100%; border:1px solid var(--line); padding:6px; border-radius:4px;" />
+                    <small style="color:var(--muted); font-size:8px;">feet</small>
+                  </div>
+                  <div>
+                    <label class="field-label" for="design-roof">Roof Layout</label>
+                    <select id="design-roof" style="width:100%; border:1px solid var(--line); padding:6px; border-radius:4px; font-size:11px;">
+                      <option value="flat">Flat Roof</option>
+                      <option value="gabled">Slope (Gabled)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="field-label" for="design-color">Facade Theme</label>
+                  <select id="design-color" style="width:100%; border:1px solid var(--line); padding:6px; border-radius:4px; font-size:11px;">
+                    <option value="#eae5d8">Classic Sandstone</option>
+                    <option value="#2e3a35">Modern Charcoal</option>
+                    <option value="#ffffff">Pure White Plaster</option>
+                    <option value="#bf8334">Terracotta</option>
+                  </select>
+                </div>
+
+                <button class="primary-button dark full-width" id="btn-generate-3d">Simulate 3D Generation</button>
+
+                <!-- Status Progress bar -->
+                <div id="3d-generation-progress" style="display:none; padding:10px; background:#f4f6f3; border-radius:5px;">
+                  <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:5px;">
+                    <span id="gen-status-text">Uploading prompt...</span>
+                    <strong id="gen-percent-text">0%</strong>
+                  </div>
+                  <div style="width:100%; height:6px; background:#e6eae3; border-radius:3px; overflow:hidden;">
+                    <div id="gen-progress-fill" style="width:0%; height:100%; background:var(--gold); transition:0.3s;"></div>
+                  </div>
+                </div>
+              </aside>
+
+              <!-- 3D Canvas Box -->
+              <div id="3d-canvas-wrapper" style="position:relative; min-height:430px; display:grid; place-items:center; border: 1px solid var(--line); border-radius:12px; background:radial-gradient(circle, #243530 0%, #15221e 100%);">
+                <div id="r3f-canvas-container" style="position:absolute; inset:0;">
+                  <!-- Mounted by mount3DCanvas -->
+                </div>
+                <div id="3d-placeholder-text" style="z-index:2; text-align:center; color:#87928b; font-family:'DM Mono', monospace;">
+                  <span style="font-size:36px; display:block; margin-bottom:10px;">🧱</span>
+                  <strong>3D MASSING ENGINE INITIALIZED</strong>
+                  <p style="font-size:10px; margin:5px 0 0;">Fill parameters and press generate to build model.</p>
+                </div>
+              </div>
+            </div>
           </section>
 
-          <section class="lower-grid" id="value">
-            <article class="value-card">
-              <div class="card-top"><div><p class="eyebrow">EARLY VALUE SIGNAL</p><h2>₹68–78 lakh</h2><p>Estimated plot value today</p></div><span class="trend">↗ 7.4%</span></div>
-              <div class="chart"><svg viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#d7a855" stop-opacity=".30"/><stop offset="1" stop-color="#d7a855" stop-opacity="0"/></linearGradient></defs><path d="M0,100 C30,92 45,91 70,82 S115,75 140,80 S180,61 210,65 S245,70 270,52 S310,60 340,45 S380,50 405,38 S450,44 480,28 S525,34 600,10 L600,120 L0,120Z" fill="url(#fill)"/><path d="M0,100 C30,92 45,91 70,82 S115,75 140,80 S180,61 210,65 S245,70 270,52 S310,60 340,45 S380,50 405,38 S450,44 480,28 S525,34 600,10" fill="none" stroke="#c28b31" stroke-width="3"/></svg></div>
-              <div class="value-footer"><span>Based on preliminary locality signals</span><button class="text-button" data-action="valuation">See estimate →</button></div>
-            </article>
-            <article class="checklist-card">
-              <div class="card-top"><div><p class="eyebrow">PROJECT CHECKLIST</p><h2>Keep moving forward</h2></div><span class="check-count">1 / 4</span></div>
-              <ul><li class="done"><span>✓</span><div><b>Select a plot</b><small>Plot near Kharadi</small></div></li><li><span></span><div><b>Verify land records</b><small>Ready when you are</small></div></li><li><span></span><div><b>Create home concept</b><small>Unlock after record check</small></div></li><li><span></span><div><b>Review value report</b><small>Unlock after concept</small></div></li></ul>
-            </article>
+          <!-- ================= TAB: VALUATION & ROI ================= -->
+          <section class="tab-content" id="tab-value">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">PHASE 4 · FINANCIAL INTELLIGENCE</p>
+                <h2>Predictive Property Valuation &amp; ROI Projections</h2>
+                <p>Calculated dynamic ranges and construction estimates factoring in Prayagraj circle rates and terrain vectors.</p>
+              </div>
+            </div>
+
+            <!-- PDF printable block wrap -->
+            <div id="pdf-report-document">
+              <!-- Header visible only in PDF / Print report -->
+              <div class="pdf-only-header" style="display:none; padding:20px; border-bottom:2px solid var(--gold); background:var(--green); color:white; margin-bottom:20px;">
+                <h2>apna<span>ghar</span> Property Valuation Report</h2>
+                <p style="margin:0; font-size:10px;">Prayagraj Smart City Development Pilot • DPDP Compliance Code: E-2023</p>
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:20px;">
+                <!-- Left panel: Valuation Details -->
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                  <div class="journey-card" style="margin-bottom:0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <div>
+                        <p class="eyebrow">LAND ESTIMATE RANGE</p>
+                        <h2 style="font-size:26px; color:var(--green); margin:5px 0 0;" id="val-land-range">₹68.0L – ₹78.0L</h2>
+                        <span style="font-size:10px; color:var(--muted);">Circle Rate base: <span id="val-tehsil-circle-rate">₹22,000</span>/sqm. Confidence Interval: ±8%</span>
+                      </div>
+                      <div class="trend" id="val-trend-badge">↗ 8.2% YoY</div>
+                    </div>
+
+                    <div class="form-rule" style="margin:15px 0;"></div>
+
+                    <div>
+                      <p class="eyebrow">CONSTRUCTION BOQ ESTIMATED COST</p>
+                      <h2 style="font-size:26px; color:var(--gold); margin:5px 0 0;" id="val-const-range">₹38.5L – ₹44.2L</h2>
+                      <span style="font-size:10px; color:var(--muted);">Volumetric Scale: <span id="val-scale-cft">48,000</span> cubic feet. Standard Prayagraj BOQ Rate</span>
+                    </div>
+                  </div>
+
+                  <!-- Explainable Reason Matrix -->
+                  <div class="journey-card" style="margin-bottom:0;">
+                    <h3 style="margin-top:0;">Explainable Valuation Reason Matrix</h3>
+                    <p class="subtle" style="margin-bottom:15px;">How regional factors and physical parameters affected the estimated pricing.</p>
+                    
+                    <table style="font-size:12px;">
+                      <thead>
+                        <tr>
+                          <th>Parameter Factor</th>
+                          <th>Recorded State</th>
+                          <th>Impact Score</th>
+                          <th>Technical Rationale</th>
+                        </tr>
+                      </thead>
+                      <tbody id="valuation-matrix-rows">
+                        <!-- Dynamic items -->
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Price appreciation curves -->
+                  <div class="journey-card" style="margin-bottom:0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                      <h3 style="margin:0;">5-Year ROI Projection Models</h3>
+                      <div style="display:flex; gap:6px;">
+                        <button class="secondary-button active" id="roi-curve-btn-exp" style="padding:4px 8px; font-size:9.5px;">Expected</button>
+                        <button class="secondary-button" id="roi-curve-btn-con" style="padding:4px 8px; font-size:9.5px;">Conservative</button>
+                        <button class="secondary-button" id="roi-curve-btn-opt" style="padding:4px 8px; font-size:9.5px;">Optimistic</button>
+                      </div>
+                    </div>
+                    <p class="subtle" style="margin-bottom:15px;" id="roi-infrastructure-reason">Expected appreciation includes Phaphamau bridge construction and Prayagraj Smart City phase 2 zone additions.</p>
+
+                    <!-- Simple SVG Graph drawing appreciation curves -->
+                    <div style="height:140px; position:relative; background:#fbfcf8; border:1px solid var(--line); border-radius:6px; padding:10px;">
+                      <svg id="roi-chart-svg" viewBox="0 0 500 120" style="width:100%; height:100%;" preserveAspectRatio="none">
+                        <!-- Curves drawn dynamically in JS -->
+                        <path id="roi-chart-path" d="" fill="none" stroke="var(--gold)" stroke-width="3" />
+                        <path id="roi-chart-area" d="" fill="rgba(197, 144, 56, 0.1)" />
+                      </svg>
+                      <!-- Year labels -->
+                      <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--muted); margin-top:5px; font-family:'DM Mono';">
+                        <span>Year 0 (Today)</span>
+                        <span>Year 1</span>
+                        <span>Year 2</span>
+                        <span>Year 3</span>
+                        <span>Year 4</span>
+                        <span>Year 5</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right panel: Connect with Appraiser / summary list -->
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                  <div class="journey-card" style="margin-bottom:0; background:#203b35; color:white; border-color:#203b35;">
+                    <p class="eyebrow" style="color:var(--sage);">RERA VALIDATED PARTNERS</p>
+                    <h3 style="color:white; margin:5px 0 10px;">Connect with a local Prayagraj Appraiser</h3>
+                    <p style="font-size:11px; line-height:1.5; color:var(--sage); margin-bottom:20px;">
+                      Official valuation reports for land title loans and construction permits require a signed property appraisal from a RERA-registered surveyor.
+                    </p>
+                    
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                      <button class="primary-button full-width" style="background:var(--gold); color:var(--green);" onclick="alert('Connecting with Prayagraj Appraisers (RERA Registered list)...')">Connect RERA Appraiser</button>
+                      <button class="secondary-button full-width" style="background:transparent; color:white; border-color:rgba(255,255,255,0.2);" onclick="window.print()">Print Official Sheet</button>
+                    </div>
+                  </div>
+
+                  <div class="checklist-card" style="margin-bottom:0;">
+                    <div class="card-top">
+                      <div><p class="eyebrow">PROJECT SCORECARD</p><h2>Ecosystem Status</h2></div>
+                      <span class="check-count" id="checklist-progress-badge">2 / 4 Complete</span>
+                    </div>
+                    <ul id="checklist-items">
+                      <li class="done" id="chk-land"><span>✓</span><div><b>Discover plot location</b><small>Coordinates &amp; Topography set</small></div></li>
+                      <li id="chk-legal"><span></span><div><b>UP Bhulekh Land Records</b><small>Unverified match</small></div></li>
+                      <li id="chk-design"><span></span><div><b>Architectural 3D Concept</b><small>No model generated</small></div></li>
+                      <li id="chk-value"><span></span><div><b>Valuation Estimates</b><small>Requires 3D geometry</small></div></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer disclaimer -->
+              <div style="margin-top:30px; text-align:center; font-size:10px; color:var(--muted); line-height:1.5;">
+                <p>Apna Ghar pricing predictions compile dynamic circle rates of Uttar Pradesh government and regional listing crawls. BOQ pricing represents estimated average local building material indexes. Real pricing fluctuates according to market demand, soil stability, and contractor negotiations.</p>
+              </div>
+            </div>
           </section>
-          <p class="disclaimer">Apna Ghar provides preliminary insights and concept visualisations. Land records and valuations require qualified professional review before a purchase or construction decision.</p>
-        </section>
+        </div>
       </main>
     </div>
 
-    <dialog id="action-dialog"><button class="dialog-close" aria-label="Close">×</button><div id="dialog-content"></div></dialog>
+    <!-- Modals & Toasts -->
+    <dialog id="action-dialog">
+      <button class="dialog-close" aria-label="Close">×</button>
+      <div id="dialog-content"></div>
+    </dialog>
+    
     <div class="toast" role="status" aria-live="polite"></div>
+    
+    <!-- Main Application Scripts -->
     <script src="app.js"></script>
   </body>
 </html>

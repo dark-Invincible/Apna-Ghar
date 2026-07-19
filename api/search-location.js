@@ -4,32 +4,53 @@ function getQuery(value) {
   return typeof value === 'string' ? value.trim().slice(0, MAX_QUERY_LENGTH) : '';
 }
 
+// In-memory throttling queue for Nominatim to respect the 1 req/sec policy.
+let lastRequestTime = 0;
+
+async function throttleRequest() {
+  const now = Date.now();
+  const timePassed = now - lastRequestTime;
+  if (timePassed < 1000) {
+    const delay = 1000 - timePassed;
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+  lastRequestTime = Date.now();
+}
+
 export default async function handler(request, response) {
   if (request.method !== 'GET') return response.status(405).json({ error: 'Method not allowed' });
 
   const query = getQuery(request.query.q);
   if (query.length < 3) return response.status(400).json({ error: 'Enter at least 3 characters to search.' });
 
-  const key = process.env.GOOGLE_MAPS_SERVER_KEY;
-  if (!key) return response.status(503).json({ error: 'Location search is not configured yet.' });
-
   try {
-    const url = new URL('https://maps.googleapis.com/maps/api/geocode/json');
-    url.searchParams.set('address', query);
-    url.searchParams.set('components', 'country:IN');
-    url.searchParams.set('region', 'in');
-    url.searchParams.set('key', key);
-    const googleResponse = await fetch(url);
-    if (!googleResponse.ok) throw new Error(`Google API returned ${googleResponse.status}`);
-    const payload = await googleResponse.json();
-    if (payload.status !== 'OK' || !payload.results?.length) return response.status(404).json({ error: 'No matching location was found in India.' });
+    // Wait for the throttling delay to ensure max 1 req/sec.
+    await throttleRequest();
 
-    const results = payload.results.slice(0, 5).map(result => ({
-      label: result.formatted_address,
-      latitude: result.geometry.location.lat,
-      longitude: result.geometry.location.lng,
-      precision: result.geometry.location_type
+    const url = new URL('https://nominatim.openstreetmap.org/search');
+    url.searchParams.set('q', query);
+    url.searchParams.set('format', 'json');
+    url.searchParams.set('addressdetails', '1');
+    url.searchParams.set('limit', '5');
+    url.searchParams.set('countrycodes', 'in');
+
+    const osmResponse = await fetch(url, {
+      headers: {
+        'User-Agent': 'ApnaGhar-Ecosystem/1.0 (contact@apnaghar.in; school-project/learning)'
+      }
+    });
+
+    if (!osmResponse.ok) throw new Error(`Nominatim API returned ${osmResponse.status}`);
+    const payload = await osmResponse.json();
+    if (!payload || !payload.length) return response.status(404).json({ error: 'No matching location was found in India.' });
+
+    const results = payload.map(result => ({
+      label: result.display_name,
+      latitude: parseFloat(result.lat),
+      longitude: parseFloat(result.lon),
+      precision: result.type || result.class || 'locality'
     }));
+
     response.setHeader('Cache-Control', 'private, max-age=300');
     return response.status(200).json({ results });
   } catch (error) {
@@ -37,3 +58,4 @@ export default async function handler(request, response) {
     return response.status(502).json({ error: 'Location search is temporarily unavailable.' });
   }
 }
+
