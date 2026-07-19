@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Apna Ghar turns a plot of land into a clearer home-buying and building decision." />
+    <title>Apna Ghar — Land to home, with clarity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <a class="brand" href="#overview" aria-label="Apna Ghar home">
+          <span class="brand-mark"><span></span><span></span><span></span></span>
+          <span>apna<span>ghar</span></span>
+        </a>
+        <nav>
+          <a class="nav-link active" href="#overview" data-nav="overview"><span>⌂</span> Overview</a>
+          <a class="nav-link" href="#land" data-nav="land"><span>◫</span> My land</a>
+          <a class="nav-link" href="#design" data-nav="design"><span>◇</span> Design studio</a>
+          <a class="nav-link" href="#value" data-nav="value"><span>₹</span> Value report</a>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="help-card">
+            <span class="help-icon">?</span>
+            <strong>Need a second opinion?</strong>
+            <p>Invite a lawyer or architect when your plot is ready.</p>
+            <button class="text-button" data-action="invite">Invite expert →</button>
+          </div>
+          <button class="profile" data-action="profile"><span class="avatar">AK</span><span><b>Arjun Kumar</b><small>Personal workspace</small></span><i>⌄</i></button>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <button class="mobile-menu" aria-label="Open menu">☰</button>
+          <div class="breadcrumbs"><span>Workspace</span><b>/</b><strong>New home project</strong></div>
+          <div class="topbar-actions"><button class="icon-button" aria-label="Notifications">♧<span></span></button><button class="share-button" data-action="share">Share project</button></div>
+        </header>
+
+        <section class="content" id="overview">
+          <div class="welcome-row">
+            <div>
+              <p class="eyebrow">YOUR LAND-TO-HOME WORKSPACE</p>
+              <h1>Good morning, Arjun.</h1>
+              <p class="subtle">Move from plot discovery to a confident home decision, one clear step at a time.</p>
+            </div>
+            <button class="primary-button" data-action="new-project"><span>+</span> Start a new project</button>
+          </div>
+
+          <section class="journey-card" aria-labelledby="journey-title">
+            <div class="journey-heading"><div><p class="eyebrow">YOUR JOURNEY</p><h2 id="journey-title">From land to home</h2></div><span class="progress-label">1 of 4 complete</span></div>
+            <div class="journey-steps">
+              <button class="journey-step complete" data-target="land"><span class="step-number">✓</span><span><b>Discover land</b><small>Plot selected</small></span></button>
+              <button class="journey-step current" data-target="land"><span class="step-number">2</span><span><b>Verify records</b><small>Ready to begin</small></span></button>
+              <button class="journey-step" data-target="design"><span class="step-number">3</span><span><b>Design your home</b><small>AI concept studio</small></span></button>
+              <button class="journey-step" data-target="value"><span class="step-number">4</span><span><b>Know the value</b><small>Cost &amp; market estimate</small></span></button>
+            </div>
+          </section>
+
+          <section class="project-grid" id="land">
+            <article class="plot-card">
+              <div class="card-top"><div><p class="eyebrow">ACTIVE PROJECT</p><h2>Plot near Kharadi</h2><p class="location"><span>⌖</span> Pune, Maharashtra</p></div><button class="more-button" aria-label="Project options">•••</button></div>
+              <div class="map-art" role="img" aria-label="Illustrative map of the selected Kharadi plot">
+                <div class="map-label label-one">EON IT PARK</div><div class="map-label label-two">KHARADI</div><div class="road road-a"></div><div class="road road-b"></div><div class="road road-c"></div><div class="river"></div><div class="plot-pin"><i></i><b>Selected plot</b></div><div class="north">N ↑</div>
+              </div>
+              <div class="plot-meta"><span><b>2,400</b> sq ft plot</span><span><b>4.8 km</b> from city centre</span><button class="text-button" data-action="view-land">View land details →</button></div>
+            </article>
+
+            <article class="insight-card terrain-card">
+              <div class="card-top"><div><p class="eyebrow">TERRAIN SNAPSHOT</p><h2>Buildable with care</h2></div><span class="status calm">Low slope</span></div>
+              <div class="terrain-visual"><span class="contour c1"></span><span class="contour c2"></span><span class="contour c3"></span><span class="terrain-marker"></span></div>
+              <div class="metric-row"><div><b>3.2°</b><small>average slope</small></div><div><b>560 m</b><small>elevation</small></div><div><b>East</b><small>best frontage</small></div></div>
+              <button class="secondary-button" data-action="terrain">Explore terrain</button>
+            </article>
+          </section>
+
+          <section class="action-grid">
+            <article class="action-card legal-card">
+              <div class="card-icon gold">⌑</div><div><p class="eyebrow">NEXT BEST STEP</p><h2>Check land records</h2><p>Use Khasra, Khata, or survey number to begin a land-record match.</p></div><button class="primary-button dark" data-action="verify">Verify land details <span>→</span></button>
+            </article>
+            <article class="action-card design-card" id="design">
+              <div class="mini-home"><span></span><i></i><b></b></div><div><p class="eyebrow">AI DESIGN STUDIO</p><h2>Imagine what belongs here</h2><p>Describe a home, upload an inspiration image, or start from a blueprint.</p></div><button class="secondary-button" data-action="design">Create a concept <span>→</span></button>
+            </article>
+          </section>
+
+          <section class="lower-grid" id="value">
+            <article class="value-card">
+              <div class="card-top"><div><p class="eyebrow">EARLY VALUE SIGNAL</p><h2>₹68–78 lakh</h2><p>Estimated plot value today</p></div><span class="trend">↗ 7.4%</span></div>
+              <div class="chart"><svg viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#d7a855" stop-opacity=".30"/><stop offset="1" stop-color="#d7a855" stop-opacity="0"/></linearGradient></defs><path d="M0,100 C30,92 45,91 70,82 S115,75 140,80 S180,61 210,65 S245,70 270,52 S310,60 340,45 S380,50 405,38 S450,44 480,28 S525,34 600,10 L600,120 L0,120Z" fill="url(#fill)"/><path d="M0,100 C30,92 45,91 70,82 S115,75 140,80 S180,61 210,65 S245,70 270,52 S310,60 340,45 S380,50 405,38 S450,44 480,28 S525,34 600,10" fill="none" stroke="#c28b31" stroke-width="3"/></svg></div>
+              <div class="value-footer"><span>Based on preliminary locality signals</span><button class="text-button" data-action="valuation">See estimate →</button></div>
+            </article>
+            <article class="checklist-card">
+              <div class="card-top"><div><p class="eyebrow">PROJECT CHECKLIST</p><h2>Keep moving forward</h2></div><span class="check-count">1 / 4</span></div>
+              <ul><li class="done"><span>✓</span><div><b>Select a plot</b><small>Plot near Kharadi</small></div></li><li><span></span><div><b>Verify land records</b><small>Ready when you are</small></div></li><li><span></span><div><b>Create home concept</b><small>Unlock after record check</small></div></li><li><span></span><div><b>Review value report</b><small>Unlock after concept</small></div></li></ul>
+            </article>
+          </section>
+          <p class="disclaimer">Apna Ghar provides preliminary insights and concept visualisations. Land records and valuations require qualified professional review before a purchase or construction decision.</p>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="action-dialog"><button class="dialog-close" aria-label="Close">×</button><div id="dialog-content"></div></dialog>
+    <div class="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

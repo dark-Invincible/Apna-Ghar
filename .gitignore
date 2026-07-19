@@ -1,0 +1,8 @@
+# ChatGPT project reference material is synced and must not be versioned here.
+sources/
+AGENTS.md
+
+# Local development files
+.DS_Store
+Thumbs.db
+node_modules/
